@@ -3,17 +3,17 @@
 
 
     
-    
-    
   <url>
     <loc>http://yoursite.com/2017/10/11/eventbus/</loc>
-    <lastmod>2017-10-17T06:26:03.693Z</lastmod>
+    <lastmod>2017-10-17T06:31:57.639Z</lastmod>
     <data>
         <display>
         <title>EventBus实践</title>
         <pubTime>2017-10-11T12:03:00.000Z</pubTime>
         
-        <tag>-android -事件总线</tag>
+        <tag>android</tag>
+         
+        <tag>事件总线</tag>
          
          
            
@@ -24,6 +24,8 @@
     </data>
     </url>
 
+    
+    
     
   <url>
     <loc>http://yoursite.com/2017/10/01/hello-world/</loc>
