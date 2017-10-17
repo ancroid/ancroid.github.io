@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,12 +79,16 @@
 
 
 
+<meta name="description" content="他人即地狱">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="CR&#39;s Note">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="CR&#39;s Note">
+<meta property="og:description" content="他人即地狱">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="CR&#39;s Note">
+<meta name="twitter:description" content="他人即地狱">
 
 
 
@@ -92,15 +96,15 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Pisces',
     version: '5.1.3',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -120,19 +124,29 @@
 
 
 
-  <title>Hexo</title>
+  <title>CR's Note</title>
   
 
 
 
 
 
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?076d34f439d943c4bcf154bf84663e96";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
 
 
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -142,7 +156,8 @@
   <div class="container sidebar-position-left 
   page-home">
     <div class="headband"></div>
-
+    <a href="https://github.com/ancroid"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
@@ -151,7 +166,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">CR's Note</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -181,7 +196,37 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -191,7 +236,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            归档
           </a>
         </li>
       
@@ -231,13 +276,13 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/eventbus/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="ancroid">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="CR's Note">
     </span>
 
     
@@ -257,9 +302,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-11T20:03:00+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T20:03:00+08:00">
                 2017-10-11
               </time>
             
@@ -299,7 +344,12 @@
       
         
           
-            <h3 id="EventBus中的四种订阅函数（接收事件）"><a href="#EventBus中的四种订阅函数（接收事件）" class="headerlink" title="EventBus中的四种订阅函数（接收事件）"></a>EventBus中的四种订阅函数（接收事件）</h3><p>-OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。<br>-onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。<br>-onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果事件从子线程发出，那么onEvnetBackground就在该子线程执行。<br>-onEventAsync： 无论事件从哪个线程发出，onEventAsync都会创建新的子线程执行。</p>
+            <h3 id="EventBus中的四种订阅函数（接收事件）"><a href="#EventBus中的四种订阅函数（接收事件）" class="headerlink" title="EventBus中的四种订阅函数（接收事件）"></a>EventBus中的四种订阅函数（接收事件）</h3><ul>
+<li>OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。</li>
+<li>onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。</li>
+<li>onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果事件从子线程发出，那么onEvnetBackground就在该子线程执行。</li>
+<li>onEventAsync： 无论事件从哪个线程发出，onEventAsync都会创建新的子线程执行。</li>
+</ul>
 <blockquote>
 <p>在EventBus3.0之前事件处理的方法只能限定于onEvent、onEventMainThread、onEventBackgroundThread和onEventAsync，他们分别代表四种线程模型。而在EventBus3.0之后，事件处理的方法可以随便取名，但是需要添加一个注解@Subscribe，并且要指定线程模型（默认为POSTING）</p>
 </blockquote>
@@ -359,13 +409,13 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/01/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="ancroid">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="CR's Note">
     </span>
 
     
@@ -385,9 +435,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-01T20:03:00+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-01T20:03:00+08:00">
                 2017-10-01
               </time>
             
@@ -506,8 +556,12 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">John Doe</p>
-              <p class="site-description motion-element" itemprop="description"></p>
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="ancroid" />
+            
+              <p class="site-author-name" itemprop="name">ancroid</p>
+              <p class="site-description motion-element" itemprop="description">他人即地狱</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -518,7 +572,7 @@
                 <a href="/archives/">
               
                   <span class="site-state-item-count">2</span>
-                  <span class="site-state-item-name">Artikel</span>
+                  <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
@@ -532,6 +586,14 @@
           
 
           <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ancroid" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
             
           </div>
 
@@ -564,13 +626,13 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">ancroid</span>
 
   
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -578,7 +640,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
 
 
 
@@ -677,6 +739,13 @@
 
   
   
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
 
   
 

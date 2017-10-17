@@ -4,12 +4,12 @@
 
     
   <url>
-    <loc>http://yoursite.com/2017/10/01/hello-world/</loc>
-    <lastmod>2017-10-16T12:52:24.363Z</lastmod>
+    <loc>http://yoursite.com/2017/10/11/eventbus/</loc>
+    <lastmod>2017-10-16T12:56:27.058Z</lastmod>
     <data>
         <display>
-        <title>Hello World</title>
-        <pubTime>2017-10-01T12:03:00.000Z</pubTime>
+        <title>EventBus实践</title>
+        <pubTime>2017-10-11T12:03:00.000Z</pubTime>
         
          
            
@@ -19,12 +19,12 @@
 
     
   <url>
-    <loc>http://yoursite.com/2017/10/11/eventbus/</loc>
-    <lastmod>2017-10-16T12:51:47.604Z</lastmod>
+    <loc>http://yoursite.com/2017/10/01/hello-world/</loc>
+    <lastmod>2017-10-16T12:52:24.363Z</lastmod>
     <data>
         <display>
-        <title>EventBus实践</title>
-        <pubTime>2017-10-11T12:03:00.000Z</pubTime>
+        <title>Hello World</title>
+        <pubTime>2017-10-01T12:03:00.000Z</pubTime>
         
          
            
