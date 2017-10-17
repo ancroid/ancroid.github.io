@@ -89,7 +89,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160821151026460">
 <meta property="og:image" content="http://img.blog.csdn.net/20160821171434514">
 <meta property="og:image" content="http://img.blog.csdn.net/20160821173205046">
-<meta property="og:updated_time" content="2017-10-16T12:56:27.058Z">
+<meta property="og:updated_time" content="2017-10-17T06:06:25.432Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EventBus实践">
 <meta name="twitter:description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果">
@@ -103,7 +103,7 @@
     root: '/',
     scheme: 'Pisces',
     version: '5.1.3',
-    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -205,16 +205,6 @@
         </li>
       
         
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-tags">
           <a href="/tags/" rel="section">
             
@@ -241,6 +231,16 @@
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
           </a>
         </li>
       
@@ -355,9 +355,15 @@
 </blockquote>
 <h3 id="接收事件："><a href="#接收事件：" class="headerlink" title="接收事件："></a>接收事件：</h3><p>1.注册过eventbus的activity须实现订阅方法<br>@Subcrible(threadMode)<br>public void HandleEvent（EventType event）{<br>   ….//dosomething<br>}</p>
 <p>2.接收事件方法可以类似重载构造，eventbus会根据参数不同自动调用。<br>例如：<br>HandleEvent（EventType event1）<br>HandleEvent（EventType event1，EventType event2）<br>HandleEvent（EventType event1，EventType event2，EventType event3）</p>
-<h3 id="三个核心方法原理："><a href="#三个核心方法原理：" class="headerlink" title="三个核心方法原理："></a>三个核心方法原理：</h3><p>register<br><img src="http://img.blog.csdn.net/20160821151026460" alt="此处输入图片的描述"></p>
-<p>post<br><img src="http://img.blog.csdn.net/20160821171434514" alt="此处输入图片的描述"></p>
-<p>unregister<br><img src="http://img.blog.csdn.net/20160821173205046" alt="此处输入图片的描述"></p>
+<h3 id="三个核心方法原理："><a href="#三个核心方法原理：" class="headerlink" title="三个核心方法原理："></a>三个核心方法原理：</h3><blockquote class="blockquote-center"><p>register </p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20160821151026460" alt="此处输入图片的描述"></p>
+<blockquote class="blockquote-center"><p>post </p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20160821171434514" alt="此处输入图片的描述"></p>
+<blockquote class="blockquote-center"><p>unregister </p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20160821173205046" alt="此处输入图片的描述"></p>
 
       
     </div>
@@ -494,6 +500,12 @@
                       <i class="fa fa-fw fa-github"></i>GitHub</a>
                 </span>
               
+                <span class="links-of-author-item">
+                  <a href="https://www.facebook.com/ancroid" target="_blank" title="FB Page">
+                    
+                      <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+                </span>
+              
             
           </div>
 
@@ -605,6 +617,9 @@
 
 
 
+  
+  
+
 
 
 
@@ -641,6 +656,16 @@
   
   
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
   
 
 
