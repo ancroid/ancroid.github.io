@@ -3,16 +3,23 @@
 
 
     
+    
+    
   <url>
     <loc>http://yoursite.com/2017/10/11/eventbus/</loc>
-    <lastmod>2017-10-17T06:06:25.432Z</lastmod>
+    <lastmod>2017-10-17T06:26:03.693Z</lastmod>
     <data>
         <display>
         <title>EventBus实践</title>
         <pubTime>2017-10-11T12:03:00.000Z</pubTime>
         
+        <tag>-android -事件总线</tag>
+         
          
            
+             
+              <breadCrumb title="Android" url="http://yoursite.com/categories/Android/"/>
+          
         </display>
     </data>
     </url>
