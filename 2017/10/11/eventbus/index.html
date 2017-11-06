@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果">
+<meta name="description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如">
 <meta name="keywords" content="android,事件总线">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EventBus实践">
 <meta property="og:url" content="http://yoursite.com/2017/10/11/eventbus/index.html">
 <meta property="og:site_name" content="CR&#39;s Note">
-<meta property="og:description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果">
+<meta property="og:description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20160821151026460">
 <meta property="og:image" content="http://img.blog.csdn.net/20160821171434514">
 <meta property="og:image" content="http://img.blog.csdn.net/20160821173205046">
-<meta property="og:updated_time" content="2017-10-17T06:35:01.206Z">
+<meta property="og:updated_time" content="2017-10-17T07:42:04.139Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EventBus实践">
-<meta name="twitter:description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果">
+<meta name="twitter:description" content="EventBus中的四种订阅函数（接收事件） OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。 onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。 onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如">
 <meta name="twitter:image" content="http://img.blog.csdn.net/20160821151026460">
 
 
@@ -357,7 +357,10 @@
       
 
       
-        <h3 id="EventBus中的四种订阅函数（接收事件）"><a href="#EventBus中的四种订阅函数（接收事件）" class="headerlink" title="EventBus中的四种订阅函数（接收事件）"></a>EventBus中的四种订阅函数（接收事件）</h3><ul>
+        <!--
+<iframe frameborder="no" border="0" mute="30" marginwidth="0" marginheight="0" width=330 height=86 src="http://music.163.com/outchain/player?type=2&id=560079&userid=328782437&auto=1&height=66"></iframe>
+-->
+<h3 id="EventBus中的四种订阅函数（接收事件）"><a href="#EventBus中的四种订阅函数（接收事件）" class="headerlink" title="EventBus中的四种订阅函数（接收事件）"></a>EventBus中的四种订阅函数（接收事件）</h3><ul>
 <li>OnEvent： 事件在哪个线程发出，OnEvent就在哪个线程中执行，但是在OnEvent中不能执行耗时操作。</li>
 <li>onEventMainThread： 不管事件在哪个线程发出，onEventMainThread都会在UI线程执行。</li>
 <li>onEvnetBackground： 如果事件从UI线程发出，那么onEvnetBackground会在子线程中执行，如果事件从子线程发出，那么onEvnetBackground就在该子线程执行。</li>
@@ -412,6 +415,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/06/View的事件分发机制/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -492,7 +499,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
