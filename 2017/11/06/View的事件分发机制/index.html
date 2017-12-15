@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="android,源码分析," />
 
 
 
@@ -79,20 +79,21 @@
 
 
 
-<meta name="description" content="View的事件分发机制标签（空格分隔）： android 源码分析  view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递 ##准备&amp;amp;&amp;amp;拓展  首先，拓展了解下Android界面的架构图 UI界面架构  Activity –&amp;gt;PhoneWindow –&amp;gt;DectorView –&amp;gt;TitleView/ContentView  PhoneWin">
+<meta name="description" content="view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递 准备&amp;amp;&amp;amp;拓展 首先，拓展了解下Android界面的架构图 UI界面架构  Activity –&amp;gt;PhoneWindow –&amp;gt;DectorView –&amp;gt;TitleView/ContentView  PhoneWindow:每个activity都包含一个window对象，具体由PhoneWi">
+<meta name="keywords" content="android,源码分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CR&#39;s Note">
+<meta property="og:title" content="View的事件分发机制">
 <meta property="og:url" content="http://yoursite.com/2017/11/06/View的事件分发机制/index.html">
 <meta property="og:site_name" content="CR&#39;s Note">
-<meta property="og:description" content="View的事件分发机制标签（空格分隔）： android 源码分析  view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递 ##准备&amp;amp;&amp;amp;拓展  首先，拓展了解下Android界面的架构图 UI界面架构  Activity –&amp;gt;PhoneWindow –&amp;gt;DectorView –&amp;gt;TitleView/ContentView  PhoneWin">
+<meta property="og:description" content="view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递 准备&amp;amp;&amp;amp;拓展 首先，拓展了解下Android界面的架构图 UI界面架构  Activity –&amp;gt;PhoneWindow –&amp;gt;DectorView –&amp;gt;TitleView/ContentView  PhoneWindow:每个activity都包含一个window对象，具体由PhoneWi">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://images2015.cnblogs.com/blog/742015/201605/742015-20160507011816138-502436220.png">
 <meta property="og:image" content="http://a2.qpic.cn/psb?/93c326a6-bf89-452c-a2c8-c3eafbaa0e07/5iavNYHGgRmUFfLmEqX938nygBA1UqzwNSzBuHS0l48!/b/dB4BAAAAAAAA&bo=vwKRAr8CkQIDCSw!&rf=viewer_4">
 <meta property="og:image" content="http://a1.qpic.cn/psb?/V11Wnvi80FD3Wv/paSCahgCAz8qLC8SlA0cEgt2E4CCCivhWDf7TrLSV2I!/b/dEIAAAAAAAAA&bo=1QSSAdUEkgEDByI!&rf=viewer_4">
-<meta property="og:updated_time" content="2017-11-06T14:06:40.256Z">
+<meta property="og:updated_time" content="2017-11-06T14:16:06.160Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CR&#39;s Note">
-<meta name="twitter:description" content="View的事件分发机制标签（空格分隔）： android 源码分析  view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递 ##准备&amp;amp;&amp;amp;拓展  首先，拓展了解下Android界面的架构图 UI界面架构  Activity –&amp;gt;PhoneWindow –&amp;gt;DectorView –&amp;gt;TitleView/ContentView  PhoneWin">
+<meta name="twitter:title" content="View的事件分发机制">
+<meta name="twitter:description" content="view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递 准备&amp;amp;&amp;amp;拓展 首先，拓展了解下Android界面的架构图 UI界面架构  Activity –&amp;gt;PhoneWindow –&amp;gt;DectorView –&amp;gt;TitleView/ContentView  PhoneWindow:每个activity都包含一个window对象，具体由PhoneWi">
 <meta name="twitter:image" content="http://images2015.cnblogs.com/blog/742015/201605/742015-20160507011816138-502436220.png">
 
 
@@ -129,7 +130,7 @@
 
 
 
-  <title> | CR's Note</title>
+  <title>View的事件分发机制 | CR's Note</title>
   
 
 
@@ -284,7 +285,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">View的事件分发机制</h1>
         
 
         <div class="post-meta">
@@ -296,7 +297,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-06T22:06:25+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-06T20:03:00+08:00">
                 2017-11-06
               </time>
             
@@ -306,6 +307,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -334,11 +357,8 @@
       
 
       
-        <h1 id="View的事件分发机制"><a href="#View的事件分发机制" class="headerlink" title="View的事件分发机制"></a>View的事件分发机制</h1><p>标签（空格分隔）： android 源码分析</p>
-<hr>
-<p><em>view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递</em></p>
-<p>##准备&amp;&amp;拓展</p>
-<ol>
+        <p><em>view的事件分发主要是指点击事件，也就是系统对MotionEvent的传递</em></p>
+<h2 id="准备-amp-amp-拓展"><a href="#准备-amp-amp-拓展" class="headerlink" title="准备&amp;&amp;拓展"></a>准备&amp;&amp;拓展</h2><ol>
 <li><p>首先，拓展了解下Android界面的架构图</p>
 <center><br><img src="http://images2015.cnblogs.com/blog/742015/201605/742015-20160507011816138-502436220.png" width="250" height="250"><br>UI界面架构<br></center>
 
@@ -360,17 +380,13 @@
 </li>
 </ul>
 <hr>
-<p>##View的事件分发（or传递）</p>
-<h3 id="1-点击事件的产生"><a href="#1-点击事件的产生" class="headerlink" title="1. 点击事件的产生"></a>1. 点击事件的产生</h3><ul>
-<li><p>这里所谓的点击事件所对应的对象就是MotionEvent， 典型有三种类型：</p>
+<h2 id="View的事件分发（or传递）"><a href="#View的事件分发（or传递）" class="headerlink" title="View的事件分发（or传递）"></a>View的事件分发（or传递）</h2><h3 id="1-点击事件的产生"><a href="#1-点击事件的产生" class="headerlink" title="1. 点击事件的产生"></a>1. 点击事件的产生</h3><p>&emsp;&emsp;这里所谓的点击事件所对应的对象就是MotionEvent， 典型有三种类型：</p>
 <ol>
 <li>ACTION_DOWN ：手指接触屏幕 </li>
 <li>ACTION_MOVE ：手指在屏幕上移动   </li>
 <li>ACTION_UP：手指从屏幕上松开的一瞬间</li>
 </ol>
-</li>
-</ul>
-<p>正常情况下，一次手指触摸屏幕的行为会产生一系列点击事件。事件序列即：<br>DOWN -&gt; UP 或者 DOWN -&gt; MOVE-&gt; … -&gt;MOVE -&gt; UP ;<br>一个事件序列由DOWN开始，中间含有n个MOVE事件，最终以UP结束。</p>
+<p>&emsp;&emsp;正常情况下，一次手指触摸屏幕的行为会产生一系列点击事件。事件序列即：<br>DOWN -&gt; UP 或者 DOWN -&gt; MOVE-&gt; … -&gt;MOVE -&gt; UP ;<br>一个事件序列由DOWN开始，中间含有n个MOVE事件，最终以UP结束。</p>
 <h3 id="2-事件的传递规则"><a href="#2-事件的传递规则" class="headerlink" title="2. 事件的传递规则"></a>2. 事件的传递规则</h3><ul>
 <li>2.1 事件的传递顺序：Activity -&gt; Window -&gt; Views<br>&emsp;&emsp;事件总是先传递给Activity,Activity再传递给Window，最后Window再传给顶层View，如果顶层不处理，继续传给下一层View，重复下去。如果所有的View都不处理事件，那么事件最终会交给Activity.OnTouchEvent()处理</li>
 </ul>
@@ -417,7 +433,7 @@
 <p>&emsp;&emsp;这个地方就应证了上面所说的，view的enable属性不影响view消耗事件，只和CLICKABLE、LONG_CLICKABLE、CONTEXT_CLICKABLE属性有关。</p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (((viewFlags &amp; CLICKABLE) == CLICKABLE ||</div><div class="line">            (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE) ||</div><div class="line">            (viewFlags &amp; CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE) &#123;</div><div class="line">        <span class="keyword">switch</span> (action) &#123;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:</div><div class="line">                ....</div><div class="line">            <span class="keyword">if</span> (!mHasPerformedLongPress &amp;&amp; !mIgnoreNextUpEvent) &#123;</div><div class="line">                <span class="comment">// This is a tap, so remove the longpress check</span></div><div class="line">                removeLongPressCallback();</div><div class="line">                <span class="keyword">if</span> (!focusTaken) &#123;</div><div class="line">                    <span class="comment">// Use a Runnable and post this rather than calling</span></div><div class="line">                    <span class="comment">// performClick directly. This lets other visual state</span></div><div class="line">                    <span class="comment">// of the view update before click actions start.</span></div><div class="line">                    <span class="keyword">if</span> (mPerformClick == <span class="keyword">null</span>) &#123;</div><div class="line">                        mPerformClick = <span class="keyword">new</span> PerformClick();</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">if</span> (!post(mPerformClick)) &#123;</div><div class="line">                        performClick();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</div><div class="line">                <span class="comment">// For views inside a scrolling container, delay the pressed feedback for</span></div><div class="line">                <span class="comment">// a short period in case this is a scroll.</span></div><div class="line">                <span class="keyword">if</span> (isInScrollingContainer) &#123;</div><div class="line">                ....</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="comment">// Not inside a scrolling container, so show the feedback right away</span></div><div class="line">                    setPressed(<span class="keyword">true</span>, x, y);</div><div class="line">                    checkForLongClick(<span class="number">0</span>, x, y);</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</div><div class="line">                ....</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</div><div class="line">                ....</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckForLongPress</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (isPressed() &amp;&amp; (mParent != <span class="keyword">null</span>)</div><div class="line">                &amp;&amp; mOriginalWindowAttachCount == mWindowAttachCount) &#123;</div><div class="line">            <span class="keyword">if</span> (performLongClick(mX, mY)) &#123;</div><div class="line">                mHasPerformedLongPress = <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </code></pre><p>&emsp;&emsp;可以看到，当ACTION_UP事件发生时，如果不是longPress会调用performClick，在这个方法里，如果view设置了OnClickListener,则会调用它的OnClick方法，而且performClick是通过Runnable发布调用的，方便在处理事件之前更新View状态。<br>&emsp;&emsp;当ACTION_DOWN事件发生时，View会检查是否是LongClick事件，如果长按事件设置了回调，则执行回调方法。而且如果回调返回true的话，mHasPerformedLongPress就会设置为true，所以在长按时，当上面UP事件发生，performClick就无法调用，即短按事件就会被屏蔽。</p>
-<p>##总结<br>&emsp;&emsp;View事件分发的流程大概就是这样，后面还会继续研究滑动冲突的问题。最后，说说源码分析的那点事儿，过程很蓝瘦，但是得学会取舍，一时看不懂先略过，注重大体逻辑，跟着翻译走，没准在后面就能明白前面变量或者方法的意义，水到渠成。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;View事件分发的流程大概就是这样，后面还会继续研究滑动冲突的问题。最后，说说源码分析的那点事儿，过程很蓝瘦，但是得学会取舍，一时看不懂先略过，注重大体逻辑，跟着翻译走，没准在后面就能明白前面变量或者方法的意义，水到渠成。</p>
 
       
     </div>
@@ -432,6 +448,14 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/源码分析/" rel="tag"># 源码分析</a>
+          
+        </div>
       
 
       
@@ -531,7 +555,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -542,7 +566,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -553,7 +577,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -602,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#View的事件分发机制"><span class="nav-number">1.</span> <span class="nav-text">View的事件分发机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-点击事件的产生"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 点击事件的产生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-事件的传递规则"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 事件的传递规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-源码分析"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. 源码分析</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备-amp-amp-拓展"><span class="nav-number">1.</span> <span class="nav-text">准备&&拓展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#View的事件分发（or传递）"><span class="nav-number">2.</span> <span class="nav-text">View的事件分发（or传递）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-点击事件的产生"><span class="nav-number">2.1.</span> <span class="nav-text">1. 点击事件的产生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-事件的传递规则"><span class="nav-number">2.2.</span> <span class="nav-text">2. 事件的传递规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-源码分析"><span class="nav-number">2.3.</span> <span class="nav-text">3. 源码分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
