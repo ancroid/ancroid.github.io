@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是line">
+<meta name="description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是liner">
 <meta name="keywords" content="view,源码分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LinearLayout和RelativeLayout对比">
 <meta property="og:url" content="http://yoursite.com/2018/03/06/LinearLayout和RelativeLayout对比/index.html">
 <meta property="og:site_name" content="CR&#39;s Note">
-<meta property="og:description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是line">
+<meta property="og:description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是liner">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-21T06:29:31.860Z">
+<meta property="og:updated_time" content="2018-05-21T06:30:54.660Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LinearLayout和RelativeLayout对比">
-<meta name="twitter:description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是line">
+<meta name="twitter:description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是liner">
 
 
 
@@ -353,8 +353,7 @@
       
 
       
-        <hr>
-<h2 id="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"><a href="#还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？" class="headerlink" title="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"></a>还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？</h2><p>relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是liner的onMeasure()时间要短很多。既然出现了差异，那么就从源码角度具体分析。</p>
+        <h2 id="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"><a href="#还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？" class="headerlink" title="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"></a>还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？</h2><p>relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是liner的onMeasure()时间要短很多。既然出现了差异，那么就从源码角度具体分析。</p>
 <hr>
 <p>首先来看RelativeLayout的OnMeasure()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">        ......</div><div class="line">        View[] views = mSortedHorizontalChildren;</div><div class="line">        <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">            View child = views[i];</div><div class="line">            <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">                LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">                <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">                applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">                <span class="comment">//第一次</span></div><div class="line">                measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">                    offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        views = mSortedVerticalChildren;</div><div class="line">        count = views.length;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">            <span class="keyword">final</span> View child = views[i];</div><div class="line">            <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">                <span class="keyword">final</span> LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">                applyVerticalSizeRules(params, myHeight, child.getBaseline());</div><div class="line">                <span class="comment">//第二次</span></div><div class="line">                measureChild(child, params, myWidth, myHeight);</div><div class="line">                <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">                    offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">                    <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                        <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                            width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                            width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                            width = Math.max(width, params.mRight);</div><div class="line">                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                            width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">                    <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                        height = Math.max(height, params.mBottom);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">                    left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">                    top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">                    right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">                    bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
 <p>上面代码只截取了核心的一部分，可以看到relativelayout对子view进行了两次measure，因为相对布局的子view是基于相对位置分布的，子view之间可能分别存在横向和纵向上依赖关系，所以需要在横向和纵向分别进行一次measure来确定view的位置,最后都会调用child.measure();</p>
@@ -432,6 +431,10 @@
 
           
 
+  
+    <div class="comments" id="comments">
+      <div id="vcomments"></div>
+    </div>
   
 
 
@@ -594,6 +597,26 @@
 
 
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div style="margin:-20px;position: absolute;right:265px;">
+<dl style="float:left">
+  <dt style="float:left">
+    <dd style="float:left;width:300px">
+      <span style="float:right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span>
+      <span style="float:right">本站总访问量<span><span style="float:right" id="busuanzi_value_site_pv"></span>
+    </dd>
+  </dt>
+  <dt style="float:left;width:300px">
+    <dd>
+      <span style="float:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span style="float:left">您是第</span>
+      <span style="float:left" id="busuanzi_value_site_uv"></span>
+      <span style="float:left">个小伙伴</span>
+    </dd>
+  </dt>
+</dl>
+</div>
+
 
 
 
@@ -756,6 +779,21 @@
 
 
 
+
+  
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.1.6/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    new Valine({
+        av: AV,
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        app_id: 'WpP9S07wMKpRNUReAU2189il-gzGzoHsz',
+        app_key: 'Bum062GodGzzDoEdR5HeDaBP',
+        placeholder: 'Comment input placeholder'
+    });
+  </script>
 
 
 
