@@ -5,15 +5,15 @@
     
   <url>
     <loc>http://yoursite.com/2018/03/06/LinearLayout%E5%92%8CRelativeLayout%E5%AF%B9%E6%AF%94/</loc>
-    <lastmod>2018-05-21T06:30:54.660Z</lastmod>
+    <lastmod>2018-05-21T07:02:32.233Z</lastmod>
     <data>
         <display>
         <title>LinearLayout和RelativeLayout对比</title>
         <pubTime>2018-03-06T02:03:00.000Z</pubTime>
         
-        <tag>view</tag>
-         
         <tag>源码分析</tag>
+         
+        <tag>view</tag>
          
          
            
@@ -33,9 +33,9 @@
         <title>View的事件分发机制</title>
         <pubTime>2017-11-06T12:03:00.000Z</pubTime>
         
-        <tag>源码分析</tag>
-         
         <tag>android</tag>
+         
+        <tag>源码分析</tag>
          
          
            
