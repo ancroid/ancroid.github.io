@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="view,源码分析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是line">
+<meta name="keywords" content="view,源码分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinearLayout和RelativeLayout对比">
+<meta property="og:url" content="http://yoursite.com/2018/03/06/LinearLayout和RelativeLayout对比/index.html">
+<meta property="og:site_name" content="CR&#39;s Note">
+<meta property="og:description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是line">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-21T06:24:43.100Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LinearLayout和RelativeLayout对比">
+<meta name="twitter:description" content="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是line">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/06/LinearLayout和RelativeLayout对比/"/>
+
+
+
+
+
+  <title>LinearLayout和RelativeLayout对比 | CR's Note</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?076d34f439d943c4bcf154bf84663e96";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/ancroid"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CR's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/06/LinearLayout和RelativeLayout对比/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ancroid">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CR's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LinearLayout和RelativeLayout对比</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-06T10:03:00+08:00">
+                2018-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<h2 id="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"><a href="#还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？" class="headerlink" title="还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"></a>还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？</h2><p>relativelayout和linerlayout都是继承自ViewGroup，所以要比较view的性能还是要看onMeasure、onLayout、onDraw三个方法。有测试数据表示在加载相同布局情况下，linerlayout的onLayout、onDraw方法的执行时间和relativelayout差不多，但是liner的onMeasure()时间要短很多。既然出现了差异，那么就从源码角度具体分析。</p>
+<hr>
+<p>首先来看RelativeLayout的OnMeasure()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">        ......</div><div class="line">        View[] views = mSortedHorizontalChildren;</div><div class="line">        <span class="keyword">int</span> count = views.length;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">            View child = views[i];</div><div class="line">            <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">                LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line">                <span class="keyword">int</span>[] rules = params.getRules(layoutDirection);</div><div class="line"></div><div class="line">                applyHorizontalSizeRules(params, myWidth, rules);</div><div class="line">                <span class="comment">//第一次</span></div><div class="line">                measureChildHorizontal(child, params, myWidth, myHeight);</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (positionChildHorizontal(child, params, myWidth, isWrapContentWidth)) &#123;</div><div class="line">                    offsetHorizontalAxis = <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        views = mSortedVerticalChildren;</div><div class="line">        count = views.length;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">            <span class="keyword">final</span> View child = views[i];</div><div class="line">            <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</div><div class="line">                <span class="keyword">final</span> LayoutParams params = (LayoutParams) child.getLayoutParams();</div><div class="line"></div><div class="line">                applyVerticalSizeRules(params, myHeight, child.getBaseline());</div><div class="line">                <span class="comment">//第二次</span></div><div class="line">                measureChild(child, params, myWidth, myHeight);</div><div class="line">                <span class="keyword">if</span> (positionChildVertical(child, params, myHeight, isWrapContentHeight)) &#123;</div><div class="line">                    offsetVerticalAxis = <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (isWrapContentWidth) &#123;</div><div class="line">                    <span class="keyword">if</span> (isLayoutRtl()) &#123;</div><div class="line">                        <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                            width = Math.max(width, myWidth - params.mLeft);</div><div class="line">                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                            width = Math.max(width, myWidth - params.mLeft - params.leftMargin);</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                            width = Math.max(width, params.mRight);</div><div class="line">                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                            width = Math.max(width, params.mRight + params.rightMargin);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (isWrapContentHeight) &#123;</div><div class="line">                    <span class="keyword">if</span> (targetSdkVersion &lt; Build.VERSION_CODES.KITKAT) &#123;</div><div class="line">                        height = Math.max(height, params.mBottom);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        height = Math.max(height, params.mBottom + params.bottomMargin);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (child != ignore || verticalGravity) &#123;</div><div class="line">                    left = Math.min(left, params.mLeft - params.leftMargin);</div><div class="line">                    top = Math.min(top, params.mTop - params.topMargin);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (child != ignore || horizontalGravity) &#123;</div><div class="line">                    right = Math.max(right, params.mRight + params.rightMargin);</div><div class="line">                    bottom = Math.max(bottom, params.mBottom + params.bottomMargin);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>上面代码只截取了核心的一部分，可以看到relativelayout对子view进行了两次measure，因为相对布局的子view是基于相对位置分布的，子view之间可能分别存在横向和纵向上依赖关系，所以需要在横向和纵向分别进行一次measure来确定view的位置,最后都会调用child.measure();</p>
+<p>再来看LinerLayout的OnMeasure:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (mOrientation == VERTICAL) &#123;</div><div class="line">        measureVertical(widthMeasureSpec, heightMeasureSpec);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        measureHorizontal(widthMeasureSpec, heightMeasureSpec);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看出来linerlayout只针对布局方向进行了一次measure。<br>具体的看下measureVertical()方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">measureVertical</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">   .....</div><div class="line">   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">            <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line">            .....</div><div class="line">            <span class="keyword">final</span> LayoutParams lp = (LayoutParams) child.getLayoutParams();</div><div class="line">            totalWeight += lp.weight;</div><div class="line">            <span class="keyword">final</span> <span class="keyword">boolean</span> useExcessSpace = lp.height == <span class="number">0</span> &amp;&amp; lp.weight &gt; <span class="number">0</span>;</div><div class="line">            <span class="comment">//设置了weight值</span></div><div class="line">            <span class="keyword">if</span> (heightMode == MeasureSpec.EXACTLY &amp;&amp; useExcessSpace) &#123;</div><div class="line">                 <span class="keyword">final</span> <span class="keyword">int</span> totalLength = mTotalLength;</div><div class="line">                mTotalLength = Math.max(totalLength, totalLength + lp.topMargin+lp.bottomMargin);</div><div class="line">                skippedMeasure = <span class="keyword">true</span>;<span class="comment">//标记位，跳过measure</span></div><div class="line">            &#125;<span class="keyword">else</span> &#123;</div><div class="line">               ....</div><div class="line">               measureChildBeforeLayout(child,i,widthMeasureSpec,<span class="number">0</span>,heightMeasureSpec,usedHeight);</div><div class="line">               ....     </div><div class="line">            &#125;    </div><div class="line">    &#125;</div><div class="line">    .....</div><div class="line">    <span class="keyword">if</span> (skippedMeasure || remainingExcess != <span class="number">0</span> &amp;&amp; totalWeight &gt; <span class="number">0.0f</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; ++i) &#123;</div><div class="line">                <span class="keyword">final</span> View child = getVirtualChildAt(i);</div><div class="line">                <span class="keyword">final</span> LayoutParams lp = (LayoutParams) child.getLayoutParams();</div><div class="line">                <span class="keyword">final</span> <span class="keyword">float</span> childWeight = lp.weight;</div><div class="line">                <span class="keyword">if</span> (childWeight &gt; <span class="number">0</span>) &#123;</div><div class="line">                    ......</div><div class="line">                    <span class="keyword">final</span> <span class="keyword">int</span> childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(</div><div class="line">                            Math.max(<span class="number">0</span>, childHeight), MeasureSpec.EXACTLY);</div><div class="line">                    <span class="keyword">final</span> <span class="keyword">int</span> childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,</div><div class="line">                            mPaddingLeft + mPaddingRight + lp.leftMargin + lp.rightMargin,</div><div class="line">                            lp.width);</div><div class="line">                    <span class="comment">//针对weight大于0的view</span></div><div class="line">                    child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面只截取了部分核心代码，可以看到如果子view的layout:weight&gt;0且layout:height=0的时候，第一次measure跳过这些view，并设置标记位skippedMeasure为true，在后面对这些view进行第二次measure。同理，measureHorizontal()里的逻辑类似。</p>
+<hr>
+<p>##总结：<br>相同的布局情况下，relativet会对子View进行两次measure，liner只对子View进行一次measure，而在设置了weight时，也会对weight进行两次measure，所以一般情况下LinearLayout的性能要优于RelativeLayout。<br>如果view的层级嵌套过多，尽量使用relativelayout来降低层级,因为relative比较灵活而且层级结构比较扁平，很多liner的嵌套都可以用一个relative来代替。这也是Google推荐的方式（之前新建项目的布局都是relativelayout）。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/view/" rel="tag"># view</a>
+          
+            <a href="/tags/源码分析/" rel="tag"># 源码分析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/06/View的事件分发机制/" rel="next" title="View的事件分发机制">
+                <i class="fa fa-chevron-left"></i> View的事件分发机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="ancroid" />
+            
+              <p class="site-author-name" itemprop="name">ancroid</p>
+              <p class="site-description motion-element" itemprop="description">慎终如始</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ancroid" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.facebook.com/ancroid" target="_blank" title="FB Page">
+                    
+                      <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？"><span class="nav-number">1.</span> <span class="nav-text">还是来从问题入手：在实现效果相同的情况下，线性布局和相对布局选择哪个？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ancroid</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
