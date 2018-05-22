@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://yoursite.com/2018/05/06/%E5%BC%BA%E5%BC%95%E7%94%A8%E3%80%81%E5%BC%B1%E5%BC%95%E7%94%A8%E3%80%81%E8%BD%AF%E5%BC%95%E7%94%A8%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8/</loc>
+    <lastmod>2018-05-22T08:11:37.650Z</lastmod>
+    <data>
+        <display>
+        <title>强引用、弱引用、软引用、虚引用</title>
+        <pubTime>2018-05-06T12:03:00.000Z</pubTime>
+        
+        <tag>java</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="http://yoursite.com/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2018/03/06/LinearLayout%E5%92%8CRelativeLayout%E5%AF%B9%E6%AF%94/</loc>
     <lastmod>2018-05-21T07:02:32.233Z</lastmod>
     <data>
@@ -11,9 +31,9 @@
         <title>LinearLayout和RelativeLayout对比</title>
         <pubTime>2018-03-06T02:03:00.000Z</pubTime>
         
-        <tag>源码分析</tag>
-         
         <tag>view</tag>
+         
+        <tag>源码分析</tag>
          
          
            
@@ -33,9 +53,9 @@
         <title>View的事件分发机制</title>
         <pubTime>2017-11-06T12:03:00.000Z</pubTime>
         
-        <tag>android</tag>
-         
         <tag>源码分析</tag>
+         
+        <tag>android</tag>
          
          
            
