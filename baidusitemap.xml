@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>https://ancroid.github.io/2018/10/30/Are%20you%20OK%20-%20%20OK%E4%BA%86%E8%A7%A3%E4%B8%8B/</loc>
+    <lastmod>2018-10-30T03:40:29.280Z</lastmod>
+    <data>
+        <display>
+        <title>Are you OK ?  OK了解下</title>
+        <pubTime>2018-10-30T12:03:00.000Z</pubTime>
+        
+        <tag>源码分析</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://ancroid.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://ancroid.github.io/2018/10/26/nothing%20but%20important/</loc>
     <lastmod>2018-10-26T06:29:03.786Z</lastmod>
     <data>
@@ -95,9 +115,9 @@
         <title>RecycleBin/Recycler的回收机制(下)</title>
         <pubTime>2018-07-18T12:03:00.000Z</pubTime>
         
-        <tag>view</tag>
-         
         <tag>源码分析</tag>
+         
+        <tag>view</tag>
          
          
            
@@ -117,9 +137,9 @@
         <title>RecycleBin/Recycler的回收机制(上)</title>
         <pubTime>2018-05-02T12:03:00.000Z</pubTime>
         
-        <tag>view</tag>
-         
         <tag>源码分析</tag>
+         
+        <tag>view</tag>
          
          
            
@@ -159,9 +179,9 @@
         <title>LinearLayout和RelativeLayout对比</title>
         <pubTime>2018-03-06T02:03:00.000Z</pubTime>
         
-        <tag>view</tag>
-         
         <tag>源码分析</tag>
+         
+        <tag>view</tag>
          
          
            
