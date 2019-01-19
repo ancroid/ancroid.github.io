@@ -88,7 +88,7 @@
 <meta property="og:description" content="简介先简单介绍下Okhttp的用法吧：直接从官网摘的：12345678910OkHttpClient client = new OkHttpClient();String run(String url) throws IOException &amp;#123;  Request request = new Request.Builder()      .url(url)      .build();">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/ancroid/ancroid.github.io/master/img/ok_chain.png">
-<meta property="og:updated_time" content="2018-10-30T03:40:29.280Z">
+<meta property="og:updated_time" content="2018-10-30T08:08:16.310Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Are you OK ?  OK了解下">
 <meta name="twitter:description" content="简介先简单介绍下Okhttp的用法吧：直接从官网摘的：12345678910OkHttpClient client = new OkHttpClient();String run(String url) throws IOException &amp;#123;  Request request = new Request.Builder()      .url(url)      .build();">
@@ -397,7 +397,7 @@
 <p>经过上面的同步请求execute后，我们就能拿到返回的Response。<br>注意：响应的其他部分可以随意获取，但是response.body必须通过数据流的方式来进行访问（ok也提供了 body.string() 和 bytes() 这样的方法将流内的数据一次性读取完毕）。响应的 body 被封装到 ResponseBody 类中，该类主要有两点需要注意：<br>（1）每个 body 只能被消费一次，多次消费会抛出异常；<br>（2）body 必须被关闭，否则会发生资源泄漏；</p>
 <hr>
 <h2 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//RealCall</span></div><div class="line">  <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Callback responseCallback)</span> </span>&#123;</div><div class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (executed) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Already Executed"</span>);</div><div class="line">      executed = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    captureCallStackTrace();</div><div class="line">    eventListener.callStart(<span class="keyword">this</span>);</div><div class="line">    client.dispatcher().enqueue(<span class="keyword">new</span> AsyncCall(responseCallback));</div><div class="line">  &#125;</div><div class="line">  </div><div class="line"><span class="comment">//Dispatcher</span></div><div class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(AsyncCall call)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(call) &lt; maxRequestsPerHost)&#123;</div><div class="line">            runningAsyncCalls.add(call);</div><div class="line">            executorService().execute(call);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            readyAsyncCalls.add(call);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> ExecutorService <span class="title">executorService</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (executorService == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">//核心线程数为0，当线程空闲时只能活60秒，不存储元素的阻塞工作队列</span></div><div class="line">            executorService = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">0</span>, Integer.MAX_VALUE, <span class="number">60</span>, TimeUnit.SECONDS,</div><div class="line">                <span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;(), Util.threadFactory(<span class="string">"OkHttp Dispatcher"</span>, <span class="keyword">false</span>));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> executorService;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>可以看到异步enqueue()方法主要是通过dispatcher来执行，如果队列runningAsyncCalls当前还能执行一个并发请求（<strong>具体的判断标准</strong>：即正在执行的异步队列中Call对象个数小于maxRequests（64）并且执行队列中的同一个host对应的Call对象个数小于maxRequestsPerHost（5）的时候），则调用executorService立即执行，可以看到这个executorService就是一个线程池。否则 将任务加入队列readyAsyncCalls，等待正在执行的Call请求的完成，调用promoteCalls，将call请求加入running状态中。</p>
+<p>可以看到异步enqueue()方法主要是通过dispatcher来执行，如果队列runningAsyncCalls当前还能执行一个并发请求（<strong>具体的判断标准</strong>：即正在执行的异步队列中Call对象个数小于maxRequests（64）并且执行队列中的同一个host对应的Call对象个数小于maxRequestsPerHost（5）的时候），则调用executorService立即执行，可以看到这个executorService就是一个可缓存线程池。否则 将任务加入队列readyAsyncCalls，等待正在执行的Call请求的完成，调用promoteCalls，将call请求加入running状态中。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncCall</span> <span class="keyword">extends</span> <span class="title">NamedRunnable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Callback responseCallback;</div><div class="line">    AsyncCall(Callback responseCallback) &#123;</div><div class="line">      <span class="keyword">super</span>(<span class="string">"OkHttp %s"</span>, redactedUrl());</div><div class="line">      <span class="keyword">this</span>.responseCallback = responseCallback;</div><div class="line">    &#125;</div><div class="line">    <span class="function">String <span class="title">host</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> originalRequest.url().host(); &#125;</div><div class="line">    <span class="function">Request <span class="title">request</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> originalRequest; &#125;</div><div class="line">    <span class="function">RealCall <span class="title">get</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> RealCall.<span class="keyword">this</span>; &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">boolean</span> signalledCallback = <span class="keyword">false</span>;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        Response response = getResponseWithInterceptorChain();</div><div class="line">        <span class="keyword">if</span> (retryAndFollowUpInterceptor.isCanceled()) &#123;</div><div class="line">          signalledCallback = <span class="keyword">true</span>;</div><div class="line">          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, <span class="keyword">new</span> IOException(<span class="string">"Canceled"</span>));</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          signalledCallback = <span class="keyword">true</span>;</div><div class="line">          responseCallback.onResponse(RealCall.<span class="keyword">this</span>, response);</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">        <span class="keyword">if</span> (signalledCallback) &#123;</div><div class="line">          <span class="comment">// Do not signal the callback twice!</span></div><div class="line">          Platform.get().log(INFO, <span class="string">"Callback failure for "</span> + toLoggableString(), e);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          eventListener.callFailed(RealCall.<span class="keyword">this</span>, e);</div><div class="line">          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, e);</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        client.dispatcher().finished(<span class="keyword">this</span>);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>上面的AsyncCall 是RealCall中的一个内部类，它实现了Runnable接口，所以可以直接提交给线程池执行，这里的run方法在父类NamedRunnable 中，内部其实调用的还是子类的execute方法，因此这里获取response的逻辑还是通过getResponseWithInterceptorChain责任链来进行的，最后通过接口回调responseCallback将响应发回去。注意这里是没有做线程切换的，所以想要UI更新的童鞋注意了。</p>
 <h2 id="Last"><a href="#Last" class="headerlink" title="Last"></a>Last</h2><p>本篇只是简单的介绍了ok的工作流程，里面详细的工作机制，比如socket连接池、缓存策略等，只能期待下一篇了。</p>
@@ -440,6 +440,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/05/iOS入门——@property属性/" rel="prev" title="iOS入门——@property属性">
+                iOS入门——@property属性 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -520,7 +524,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -531,7 +535,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -542,7 +546,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -611,7 +615,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
