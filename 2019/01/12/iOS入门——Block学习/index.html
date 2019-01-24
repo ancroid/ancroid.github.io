@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="入门@property属性详解属性大概分为三个方面：原子性、存取、内存管理：  nonatomic / atomic readonly / readwrite retain / copy / strong / weak /assign  我的理解：property属性的核心主要是实现变量的getter和setter方法（然后就可以通过点语法获取变量），在此之上，附加的关键字不同，预编译的实现也有区">
+<meta name="description" content="简介block是在iOS 4.0之后才出现的，它可以将一段代码封装起来作为变量使用。block声明：  返回值 (^block名称) (参数列表…)如:  void  (^blockName)(int arg1, int arg2)  block定义(实现)：    blockname = ^(int arg1, int arg2){       //do something       }  如">
 <meta name="keywords" content="oc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS入门——@property属性">
-<meta property="og:url" content="https://ancroid.github.io/2018/12/05/iOS入门——@property属性/index.html">
+<meta property="og:title" content="iOS入门——Block学习">
+<meta property="og:url" content="https://ancroid.github.io/2019/01/12/iOS入门——Block学习/index.html">
 <meta property="og:site_name" content="CR&#39;s Note">
-<meta property="og:description" content="入门@property属性详解属性大概分为三个方面：原子性、存取、内存管理：  nonatomic / atomic readonly / readwrite retain / copy / strong / weak /assign  我的理解：property属性的核心主要是实现变量的getter和setter方法（然后就可以通过点语法获取变量），在此之上，附加的关键字不同，预编译的实现也有区">
+<meta property="og:description" content="简介block是在iOS 4.0之后才出现的，它可以将一段代码封装起来作为变量使用。block声明：  返回值 (^block名称) (参数列表…)如:  void  (^blockName)(int arg1, int arg2)  block定义(实现)：    blockname = ^(int arg1, int arg2){       //do something       }  如">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-19T10:50:24.079Z">
+<meta property="og:updated_time" content="2019-01-24T07:29:06.166Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS入门——@property属性">
-<meta name="twitter:description" content="入门@property属性详解属性大概分为三个方面：原子性、存取、内存管理：  nonatomic / atomic readonly / readwrite retain / copy / strong / weak /assign  我的理解：property属性的核心主要是实现变量的getter和setter方法（然后就可以通过点语法获取变量），在此之上，附加的关键字不同，预编译的实现也有区">
+<meta name="twitter:title" content="iOS入门——Block学习">
+<meta name="twitter:description" content="简介block是在iOS 4.0之后才出现的，它可以将一段代码封装起来作为变量使用。block声明：  返回值 (^block名称) (参数列表…)如:  void  (^blockName)(int arg1, int arg2)  block定义(实现)：    blockname = ^(int arg1, int arg2){       //do something       }  如">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://ancroid.github.io/2018/12/05/iOS入门——@property属性/"/>
+  <link rel="canonical" href="https://ancroid.github.io/2019/01/12/iOS入门——Block学习/"/>
 
 
 
 
 
-  <title>iOS入门——@property属性 | CR's Note</title>
+  <title>iOS入门——Block学习 | CR's Note</title>
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://ancroid.github.io/2018/12/05/iOS入门——@property属性/">
+    <link itemprop="mainEntityOfPage" href="https://ancroid.github.io/2019/01/12/iOS入门——Block学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ancroid">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS入门——@property属性</h1>
+          <h1 class="post-title" itemprop="name headline">iOS入门——Block学习</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-05T20:03:00+08:00">
-                2018-12-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-12T20:03:00+08:00">
+                2019-01-12
               </time>
             
 
@@ -358,48 +358,28 @@
       
 
       
-        <h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>@property属性详解<br>属性大概分为三个方面：原子性、存取、内存管理：</p>
-<ol>
-<li>nonatomic / atomic</li>
-<li>readonly / readwrite</li>
-<li>retain / copy / strong / weak /assign</li>
-</ol>
-<p><strong>我的理解</strong>：property属性的核心主要是实现变量的getter和setter方法（然后就可以通过点语法获取变量），在此之上，附加的关键字不同，预编译的实现也有区别，所以功能也不同。</p>
-<p>这里概括下：@property 声明属性其实是做了三件事：</p>
-<ul>
-<li>.h:声明了getter和setter方法； </li>
-<li>.h:声明了实例变量(默认:下划线+属性名)； </li>
-<li>.m:实现了getter和setter方法。</li>
-</ul>
-<hr>
-<h2 id="一、-首先是线程安全："><a href="#一、-首先是线程安全：" class="headerlink" title="一、 首先是线程安全："></a>一、 首先是线程安全：</h2><p><strong><em>atomic</em></strong>（系统默认），在多线程环境下，利用aotmic保证线程安全。内部主要是通过自旋锁实现，而且保证的也是读写操作的原子性，并没有实际上我们想要的线程安全（比如自加这种额外操作）。所以一般线程安全还需要我们在外部自己实现。</p>
-<p><strong><em>nonatomic</em></strong> 跟atomic相反，可以被多个线程同时访问，效率较高但是安全性较低。</p>
-<h2 id="二、存取方法："><a href="#二、存取方法：" class="headerlink" title="二、存取方法："></a>二、存取方法：</h2><p><strong><em>readwrite</em></strong>（系统默认）：可读可写，表明该属性同时拥有setter和getter方法。</p>
-<p><strong><em>readonly</em></strong>：只读属性，只有getter方法，不希望属性在类外被改变。一般在.h文件中常用。</p>
-<p><strong><em>@synthesize</em></strong>：编译器在.m中自动合成getter和setter的实现（主要由编译器在编译期执行），但是这个在xcode4.5以后就不需要了，一个property就能搞定。</p>
-<p><strong><em>@dynamic</em></strong>：属性的getter和setter方法由用户自己实现，编译器不自动生成。这个时候还需要我们显示的声明下属性。</p>
-<h2 id="三、内存管理："><a href="#三、内存管理：" class="headerlink" title="三、内存管理："></a>三、内存管理：</h2><p><strong><em>copy</em></strong>：内容拷贝。copy属性会在赋值前，复制一个对象，这个copy修饰的属性（变量）会指向一个新对象，所以原对象的改变就不会影响新值的变化。使用：防止属性被意外修改。所有mutable(可变)的属性类型，如NSString, NSArray, NSDictionary等等（对应可变的类型:NSMutableString, NSMutableArray,NSMutableDictionary）这些非可变类型在属性赋值时，右边的值有可能是它们的可变版本。这样就会出现属性值被意外改变的可能。所以它们都应该用copy。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//应用copy属性：</div><div class="line">- (void)setNameCopy:(NSString *)nameCopy &#123;</div><div class="line">    _nameCopy = [nameCopy copy];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>注：</strong> 所以如果用copy修饰NSMutableString、NSMutableArray会出错，因为在set的时候，会将原本mutable的对象，copy成了immutable的对象。</p>
-<p><strong><em>strong</em></strong>（ARC中默认）：强引用，表示实例变量对传入的对象要有所有权关系。使用：对象类型，比如自定义对象，控制器对象。</p>
-<p><strong><em>weak</em></strong>：弱引用，在setter方法中，对传入的对象不进行引用计数加1的操作，当该对象引用计数为0时，即该对象被释放后，用weak声明的实例变量指向nil。使用：代理对象（在delegate patterns中常用weak解决strong reference cycles(以前叫retain cycles)问题），IBOutlet。</p>
-<p><strong><em>assign</em></strong>：非ARC时代的特性，作用和weak类似：简单赋值，不改变引用计数，但是不同的是如果对象被销毁，指向该对象的assign属性并不会设置为nil，这时候再访问这些属性就会crash。在ARC下，assign适用于基本数据类型（默认）。使用：int、float、double、BOOL、NSInteger等。<br><strong><em>retain</em></strong>：指针拷贝，非ARC的特性，现在在ARC中已经不怎么使用了。与strong功能一致。</p>
-<h2 id="四、其他："><a href="#四、其他：" class="headerlink" title="四、其他："></a>四、其他：</h2><p><strong><em>getter= 和 setter=</em></strong> ：重命名getter和setter方法，在ARC中存取方法不能以new开头，所以不能以new开头命名一个属性，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (copy, nonatomic) NSString *newName;</div></pre></td></tr></table></figure></p>
-<p>这样就会报错，解决办法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (copy, nonatomic, getter=theNewName) NSString *newName;</div></pre></td></tr></table></figure></p>
-<p><strong><em>Nullability</em></strong>：</p>
-<ul>
-<li>nullable：对象可为空</li>
-<li>nonnull：对象不可为空</li>
-<li>null_unspecified：未指定（默认）</li>
-<li>null_resettable：调用set方法去set属性时，可以传入nil，但是get返回值时，不会为空。所以保证即使传入nil，也会返回一个非空的值。所以一般设置为null_resettable时，需要我们去重写getter或者setter方法，保证返回值不为空。</li>
-</ul>
-<hr>
-<h2 id="总结、"><a href="#总结、" class="headerlink" title="总结、"></a>总结、</h2><ul>
-<li>在iOS开发上，大部分情况下主要都是nonatomic； </li>
-<li>对外「只读」的，写上readonly</li>
-<li>一般的对象属性，写上strong（用retain也可以，比较少用），也可以不写，ARC下对象类型默认为strong，需要解决strong reference cycles问题的对象属性，strong改为weak</li>
-<li>有mutable(可变)版本的对象属性，strong改为copy</li>
-<li>基本数据类型(int, float, BOOL)(非对象属性)，用assign</li>
-</ul>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>block是在iOS 4.0之后才出现的，它可以将一段代码封装起来作为变量使用。<br><strong>block声明</strong>：</p>
+<blockquote>
+<p>返回值 (^block名称) (参数列表…)<br>如:  void  (^blockName)(int arg1, int arg2)</p>
+</blockquote>
+<p><strong>block定义(实现)</strong>：</p>
+<blockquote>
+<p>  blockname = ^(int arg1, int arg2){<br>       //do something<br>       }</p>
+</blockquote>
+<p>如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int (^addTwoNumber)(int a, int b) = ^(int a, int b) &#123;</div><div class="line">    return a + b;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>block的作用类似java中接口回调，但仅仅是作用类似，原理上完全是两个东西。<br>举例：作为参数回调使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//block无参数</div><div class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</div><div class="line">            NSLog(@&quot;ui refresh&quot;);</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">//block带参数</div><div class="line">    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];</div><div class="line">    [manager GET:@&quot;url&quot; parameters:parameters progress:^(NSProgress *_Nonnull downloadProgress) &#123;</div><div class="line">        NSLog(@&quot;downloadProgress--&gt;%@&quot;, downloadProgress);</div><div class="line">    &#125; success:^(NSURLSessionDataTask *_Nonnull task, id _Nullable responseObject) &#123;</div><div class="line">        NSLog(@&quot;success %@&quot;, responseObject);</div><div class="line">    &#125;</div><div class="line">    &#125; failure:^(NSURLSessionDataTask *_Nullable task, NSError *_Nonnull error) &#123;</div><div class="line">        NSLog(@&quot;error %@&quot;, error);</div><div class="line">    &#125;];</div></pre></td></tr></table></figure></p>
+<p>block还能实现链式调用,返回一个block对象，并在block中返回自身对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">int main(int argc, const char * argv[])</div><div class="line">&#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        Person *p = [[Person alloc] init];</div><div class="line"></div><div class="line">        p.study(@&quot;xx宝典&quot;).run().study(@&quot;xx技能&quot;);</div><div class="line">    &#125;</div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//Person.h</div><div class="line">@interface Person : NSObject</div><div class="line"></div><div class="line">- (Person *(^)(NSString *name))study;</div><div class="line">- (Person *(^)())run;</div><div class="line">@end</div><div class="line"></div><div class="line"></div><div class="line">//Person.m</div><div class="line">@implementation Person</div><div class="line"></div><div class="line">- (Person *(^)(NSString *))study</div><div class="line">&#123;</div><div class="line">    return ^(NSString *name)&#123;</div><div class="line">        NSLog(@&quot;study----%@&quot;, name);</div><div class="line">        return self;</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (Person *(^)())run</div><div class="line">&#123;</div><div class="line">    return ^&#123;</div><div class="line">        NSLog(@&quot;run----&quot;);</div><div class="line">        return self;</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>注意：<br>1、block的内存中有一块是专门来捕获变量的，在声明的block的范围内，所有变量都可以被其捕获。但是对外部变量只能读，如果想要修改，需要给变量加上<strong>block关键字修饰。<br>2、避免循环引用， 使用</strong>weak关键字来修饰需要引用的外部对象，防止导致内存泄漏。<br>3、可以利用typedef对block进行别称定义，减少代码量，增加可读性，将“对象抽象成类”。比如：typedef void(^SayHello)();</p>
+<h2 id="block深究"><a href="#block深究" class="headerlink" title="block深究"></a>block深究</h2><p>1、block是一个函数对象，是在运行时产生的，在一个作用域中生成的block对象分配在栈上，离开作用域，就不存在了（可以利用copy将block对象拷贝到堆上）。<br>每个对象都会有一个isa指针，那么根据isa指针类型，block有三种：<br>全局静态（globalBlock）/保存在程序的数据区域中（.data区）<br>出作用域销毁（stackBlock）/保存在栈中，<br>retainCount=0销毁（mallocBlock）/保存在堆中</p>
+<p>2、block访问普通外部变量时，会将变量的值以“const方式”copy一份到block所在内存空间，所以block内部访问的并不是真正的外部变量，而且因为是const方式，所以编译器不允许修改copy的变量。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">typedef void (^CustomBlock)(void);</div><div class="line">// 外部变量</div><div class="line">int value = 0;</div><div class="line">NSLog(@&quot;block外部访问：value = %d&quot;, value);</div><div class="line">NSLog(@&quot;block外部访问：value的地址是：%p&quot;, &amp;value);</div><div class="line"></div><div class="line">CustomBlock block = ^&#123;</div><div class="line">    NSLog(@&quot;block内部访问：value = %d&quot;, value);</div><div class="line">    NSLog(@&quot;block内部访问：value的地址是：%p&quot;, &amp;value);</div><div class="line">&#125;;</div><div class="line">block();</div><div class="line">NSLog(@&quot;block回到外部访问：value的地址是：%p&quot;, &amp;value);</div></pre></td></tr></table></figure></p>
+<p>输出:</p>
+<pre><code>block外部访问：value = 0
+block外部访问：value的地址是：0x7ffeea11a0c4
+block内部访问：value = 0
+block内部访问：value的地址是：0x600003cc10a0
+block回到外部访问：value的地址是：0x7ffeea11a0c4
+</code></pre><p>还有，要注意一点：若将变量定义为__block形式，那么变量的地址将会在block结束后改为block中copy生成的新地址。<br>3、其实由上可以看出，在block中引用对象，会导致对象的生命周期被延长，特别是当某些大文件被block访问时，有几率会导致内存访问不足。<br>4、利用block做回调时，在避免循环引用的同时，还要防止引用的对象被提前释放，从而可能会因为操作nil对象导致crash，或者执行一些无意义的逻辑。所以需要我们在block内部操作时加上保护代码。（这种场景在网络访问的情景下较为常见）。</p>
+<p>未完待续。。。</p>
 
       
     </div>
@@ -430,8 +410,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/30/Are you OK -  OK了解下/" rel="next" title="Are you OK ?  OK了解下">
-                <i class="fa fa-chevron-left"></i> Are you OK ?  OK了解下
+              <a href="/2018/12/05/iOS入门——@property属性/" rel="next" title="iOS入门——@property属性">
+                <i class="fa fa-chevron-left"></i> iOS入门——@property属性
               </a>
             
           </div>
@@ -439,10 +419,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/12/iOS入门——Block学习/" rel="prev" title="iOS入门——Block学习">
-                iOS入门——Block学习 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -594,7 +570,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#入门"><span class="nav-number">1.</span> <span class="nav-text">入门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、-首先是线程安全："><span class="nav-number">2.</span> <span class="nav-text">一、 首先是线程安全：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、存取方法："><span class="nav-number">3.</span> <span class="nav-text">二、存取方法：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、内存管理："><span class="nav-number">4.</span> <span class="nav-text">三、内存管理：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、其他："><span class="nav-number">5.</span> <span class="nav-text">四、其他：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结、"><span class="nav-number">6.</span> <span class="nav-text">总结、</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#block深究"><span class="nav-number">3.</span> <span class="nav-text">block深究</span></a></li></ol></div>
             
 
           </div>
